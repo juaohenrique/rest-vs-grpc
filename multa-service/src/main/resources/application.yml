@@ -1,0 +1,8 @@
+server:
+  port: 8005
+spring:
+  application:
+    name: multa-service
+  grpc:
+    server:
+      port: 9005

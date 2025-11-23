@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package veiculo;
+
+option java_package = "br.com.jh.stubs";
+option java_multiple_files = true;
+
+import "multa.proto";
+
+service ConsultaVeiculo {
+	rpc getVeiculo (VeiculoRequest) returns (VeiculoResponse);
+}
+
+message VeiculoRequest {
+	string placa = 1;
+}
+
+message VeiculoResponse {
+	int32 id = 1;
+	string placa = 2;
+	string ano = 3;
+	string marca = 4;
+	string modelo = 5;
+	string cor = 6;
+	
+	repeated multa.v1.Multa listaMultas = 10;
+}
+

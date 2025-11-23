@@ -1,0 +1,8 @@
+server:
+  port: 8004
+spring:
+  application:
+    name: veiculo-service
+  grpc:
+    server:
+      port: 9004

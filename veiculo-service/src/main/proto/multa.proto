@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package multa.v1;
+
+// option java_package = "br.com.jh.stubs";
+// option java_multiple_files = true;
+
+service ConsultaMultas {
+	rpc ListarPorPlaca (MultaRequest) returns (MultaResponse);
+}
+
+message MultaRequest {
+	string placa = 1;
+}
+
+message Multa {
+	int32 id = 1;
+	string placa = 2;
+	string ctb = 3;
+}
+
+message MultaResponse {
+	repeated  Multa listaMultas = 1;
+}
