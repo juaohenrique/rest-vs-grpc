@@ -25,7 +25,11 @@ public class ConsultaMultasImpl extends ConsultaMultasGrpc.ConsultaMultasImplBas
     	List<Multa> multas = List.of(
     	        Multa.newBuilder().setId(1).setPlaca(req.getPlaca()).setCtb("Excesso de velocidade").build(),
     	        Multa.newBuilder().setId(2).setPlaca(req.getPlaca()).setCtb("Estacionar em local proibido").build(),
-    	        Multa.newBuilder().setId(3).setPlaca(req.getPlaca()).setCtb("Avançar sinal vermelho").build()
+    	        Multa.newBuilder().setId(3).setPlaca(req.getPlaca()).setCtb("Avançar sinal vermelho").build(),
+    	        Multa.newBuilder().setId(4).setPlaca(req.getPlaca()).setCtb("Ultrapassar em local proibido").build(),
+    	        Multa.newBuilder().setId(5).setPlaca(req.getPlaca()).setCtb("Dirigir alcoolizado").build(),
+    	        Multa.newBuilder().setId(6).setPlaca(req.getPlaca()).setCtb("Não respeitar faixa de pedestres").build(),
+    	        Multa.newBuilder().setId(7).setPlaca(req.getPlaca()).setCtb("Dirigir sem habilitação").build()
     	    );
     	
     	MultaResponse reply = MultaResponse.newBuilder()

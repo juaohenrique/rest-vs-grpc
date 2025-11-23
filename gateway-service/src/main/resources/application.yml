@@ -1,0 +1,13 @@
+server:
+  port: 8003
+spring:
+  application:
+    name: gateway-service
+#  grpc:
+#    server:
+#      port: 9003
+  grpc:
+    client:
+      channels:
+        consultaVeiculoService:
+          address: static://localhost:9004

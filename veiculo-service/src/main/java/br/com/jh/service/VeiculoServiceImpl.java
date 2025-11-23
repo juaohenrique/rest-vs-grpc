@@ -32,22 +32,13 @@ public class VeiculoServiceImpl extends ConsultaVeiculoGrpc.ConsultaVeiculoImplB
         
         MultaResponse multaResponse = multaClient.listarPorPlaca(placa);
         
-        List<Multa> multas = List.of(
-    	        Multa.newBuilder().setId(1).setPlaca(req.getPlaca()).setCtb("Excesso de velocidade").build(),
-    	        Multa.newBuilder().setId(2).setPlaca(req.getPlaca()).setCtb("Estacionar em local proibido").build(),
-    	        Multa.newBuilder().setId(3).setPlaca(req.getPlaca()).setCtb("Avançar sinal vermelho").build()
-    	    );
-        
-        System.out.println("LISTA DE MULTAS: " + multaResponse.getListaMultasList());
-        
-        
         VeiculoResponse veiculoResponse = VeiculoResponse.newBuilder()
     		.setId(1)
     		.setPlaca(placa)
-    		.setAno(placa)
-    		.setMarca(placa)
-    		.setModelo(placa)
-    		.setCor(placa)
+    		.setAno("2018")
+    		.setMarca("Volkswagem")
+    		.setModelo("Gol 1.0")
+    		.setCor("branco")
     		.addAllListaMultas(multaResponse.getListaMultasList())
     		.build();
         

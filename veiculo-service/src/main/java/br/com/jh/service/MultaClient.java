@@ -32,7 +32,7 @@ public class MultaClient {
         log.info("VEICULO-SERVICE chamando MULTA-SERVICE via gRPC. Placa={}", placa);
 
         MultaRequest request = MultaRequest.newBuilder()
-                .setPlaca("ptl-3564")
+                .setPlaca(placa)
                 .build();
 
         MultaResponse response = stub.listarPorPlaca(request);
