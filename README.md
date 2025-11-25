@@ -69,7 +69,7 @@ Avaliação de desempenho de diferentes padrões de comunicação em uma arquite
         }
 
 ![Arquitetura gRPC](arq-grpc.png)
-![Arquitetura REST](arq-grpc.png)
+![Arquitetura REST](arq-rest.png)
                 
 5.  Define o protobuf de multa-service
 6.  Define o protobuf de veiculo-service

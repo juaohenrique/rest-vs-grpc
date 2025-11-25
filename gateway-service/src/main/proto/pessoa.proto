@@ -6,11 +6,17 @@ option java_package = "br.com.jh.stubs";
 option java_multiple_files = true;
 
 service ConsultaPessoa {
-	rpc getPessoa (PessoaRequest) returns (PessoaResponse);
+	rpc FindByCpf (PessoaRequest) returns (PessoaResponse);
+	rpc FindByNome (PessoaRequest) returns (ListaPessoaResponse);
+	rpc FindAll (Empty) returns (ListaPessoaResponse);
 }
 
+message Empty {}
+
+
 message PessoaRequest {
-	string cpf = 1;
+	string nome = 1;
+	string cpf = 2;
 }
 
 message PessoaResponse {
@@ -20,4 +26,8 @@ message PessoaResponse {
 	string fone = 4;
 	string endereco = 5;
 	string cpf = 6;
+}
+
+message ListaPessoaResponse {
+	repeated PessoaResponse listaPessoas = 1;
 }

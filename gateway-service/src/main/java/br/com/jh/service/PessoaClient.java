@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import br.com.jh.stubs.ConsultaPessoaGrpc;
+import br.com.jh.stubs.Empty;
+import br.com.jh.stubs.ListaPessoaResponse;
 import br.com.jh.stubs.PessoaRequest;
 import br.com.jh.stubs.PessoaResponse;
 import io.grpc.ManagedChannel;
@@ -27,7 +29,7 @@ public class PessoaClient {
 		this.stub = ConsultaPessoaGrpc.newBlockingStub(channel);
 	}
 
-	public PessoaResponse getPessoa(String cpf) {
+	public PessoaResponse findByCpf(String cpf) {
 		
 		log.info("GATEWAY-SERVICE chamando PESSOA-SERVICE via gRPC. CPF={}", cpf);
 
@@ -35,8 +37,30 @@ public class PessoaClient {
                 .setCpf(cpf)
                 .build();
 
-        PessoaResponse response = stub.getPessoa(request);
+        PessoaResponse response = stub.findByCpf(request);
         return response;
 		
+	}
+	
+	public ListaPessoaResponse findByNome(String nome) {
+	
+		log.info("GATEWAY-SERVICE chamando PESSOA-SERVICE via gRPC.");
+		
+		PessoaRequest request = PessoaRequest.newBuilder()
+                .setNome(nome)
+                .build();
+		
+		ListaPessoaResponse response = stub.findByNome(request);
+		
+        return response;
+	}
+
+	public ListaPessoaResponse findAll() {
+		
+		log.info("GATEWAY-SERVICE chamando PESSOA-SERVICE via gRPC.");
+		
+		ListaPessoaResponse response = stub.findAll(Empty.getDefaultInstance());
+		
+        return response;
 	}
 }

@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.grpc.client.GrpcChannelFactory;
 
-import br.com.jh.stubs.ConsultaVeiculoGrpc;
+import br.com.jh.stubs.veiculo.ConsultaVeiculoGrpc;
 
 @Configuration
 public class GrpcClientsConfig {

@@ -15,9 +15,10 @@ import br.com.jh.dto.PessoaDTO;
 import br.com.jh.dto.VeiculoDTO;
 import br.com.jh.service.PessoaClient;
 import br.com.jh.service.VeiculoClient;
-import br.com.jh.stubs.PessoaRequest;
+import br.com.jh.stubs.ListaPessoaResponse;
 import br.com.jh.stubs.PessoaResponse;
-import br.com.jh.stubs.VeiculoResponse;
+import br.com.jh.stubs.veiculo.ListaVeiculoResponse;
+import br.com.jh.stubs.veiculo.VeiculoMultaResponse;
 
 @RestController
 @RequestMapping(value = "/consulta")
@@ -42,8 +43,59 @@ public class GatewayController {
     	this.veiculoClient = veiculoClient;
     	this.pessoaClient = pessoaClient;
     }
+    
+    
+    @GetMapping("/pessoas/all") 
+    public ResponseEntity<List<PessoaDTO>> getAllPessoas() {
+    	
+    	log.info("GATEWAY-SERVICE chamando PESSOA-SERVICE via gRPC.");
+    	
+    	ListaPessoaResponse listaPessoas = pessoaClient.findAll();
+    	
+    	List<PessoaDTO> pessoas =  listaPessoas
+        	.getListaPessoasList()
+        	.stream()
+        	.map(p -> new PessoaDTO(p.getId(), p.getNome(), p.getNascimento(), p.getFone(), p.getEndereco(), p.getCpf()))
+        	.toList();
+    	
+    	return ResponseEntity.ok(pessoas);
+    }
+    
+    @GetMapping("/pessoas") 
+    public ResponseEntity<List<PessoaDTO>> getByNome(@RequestParam String nome) {
+    	
+    	log.info("GATEWAY-SERVICE chamando PESSOA-SERVICE via gRPC.");
+    	
+    	ListaPessoaResponse listaPessoas = pessoaClient.findByNome(nome);
+    	
+    	List<PessoaDTO> pessoas =  listaPessoas
+        	.getListaPessoasList()
+        	.stream()
+        	.map(p -> new PessoaDTO(p.getId(), p.getNome(), p.getNascimento(), p.getFone(), p.getEndereco(), p.getCpf()))
+        	.toList();
+    	
+    	return ResponseEntity.ok(pessoas);
+    }
+    
+    
+    @GetMapping("/veiculos/all") 
+    public ResponseEntity<List<VeiculoDTO>> getAllVeiculos() {
+    	
+    	log.info("GATEWAY-SERVICE chamando VEICULO-SERVICE via gRPC.");
+    	
+    	ListaVeiculoResponse listaVeiculos = veiculoClient.findAll(); 
+    	
+    	List<VeiculoDTO> veiculos =  listaVeiculos
+        	.getListaVeiculosList()
+        	.stream()
+        	.map(v -> new VeiculoDTO(v.getId(), v.getPlaca(), v.getAno(), v.getMarca(), v.getModelo(), v.getCor(), null, null))
+        	.toList();
+    	
+    	return ResponseEntity.ok(veiculos);
+    }
+    
 	
-	@GetMapping("/veiculo")
+	@GetMapping("/veiculos")
 	public ResponseEntity<VeiculoDTO> buscaVeiculoPorPlaca(@RequestParam String placa) {
 		
 		log.info("GATEWAY-SERVICE chamando VEICULO-SERVICE via gRPC. Placa={}", placa);
@@ -54,14 +106,14 @@ public class GatewayController {
 //
 //        VeiculoResponse veiculoResponse = veiculoStub.getVeiculo(veiculoRequest);
 		
-		VeiculoResponse veiculoResponse = veiculoClient.getVeiculo(placa); 
+		VeiculoMultaResponse veiculoResponse = veiculoClient.findByPlaca(placa); 
         
 //        PessoaRequest pessoaRequest = PessoaRequest.newBuilder()
 //    		.setCpf("111.222.333-44")
 //    		.build();
         
 //        PessoaResponse pessoaResponse = pessoaStub.getPessoa(pessoaRequest);
-        PessoaResponse pessoaResponse = pessoaClient.getPessoa("111.222.333-44");
+        PessoaResponse pessoaResponse = pessoaClient.findByCpf("111.222.333-44");
         
         PessoaDTO pessoaDto = new PessoaDTO(
         	pessoaResponse.getId(), 

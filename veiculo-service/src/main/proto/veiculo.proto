@@ -2,17 +2,33 @@ syntax = "proto3";
 
 package veiculo;
 
-option java_package = "br.com.jh.stubs";
+option java_package = "br.com.jh.stubs.veiculo";
 option java_multiple_files = true;
 
 import "multa.proto";
 
 service ConsultaVeiculo {
-	rpc getVeiculo (VeiculoRequest) returns (VeiculoResponse);
+	rpc findByPlaca (VeiculoRequest) returns (VeiculoMultaResponse);
+	rpc findByProprietario (VeiculoRequest) returns (ListaVeiculoResponse);
+	rpc FindAll (Empty) returns (ListaVeiculoResponse);
 }
+
+message Empty {}
 
 message VeiculoRequest {
 	string placa = 1;
+	string cpfProprietario = 2;
+}
+
+message VeiculoMultaResponse {
+	int32 id = 1;
+	string placa = 2;
+	string ano = 3;
+	string marca = 4;
+	string modelo = 5;
+	string cor = 6;
+	
+	repeated multa.v1.Multa listaMultas = 10;
 }
 
 message VeiculoResponse {
@@ -22,7 +38,9 @@ message VeiculoResponse {
 	string marca = 4;
 	string modelo = 5;
 	string cor = 6;
-	
-	repeated multa.v1.Multa listaMultas = 10;
+}
+
+message ListaVeiculoResponse {
+	repeated VeiculoResponse listaVeiculos = 1;
 }
 

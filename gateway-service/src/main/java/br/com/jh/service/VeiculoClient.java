@@ -4,14 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import br.com.jh.stubs.ConsultaVeiculoGrpc;
-import br.com.jh.stubs.VeiculoRequest;
-import br.com.jh.stubs.VeiculoResponse;
+import br.com.jh.stubs.veiculo.ConsultaVeiculoGrpc;
+import br.com.jh.stubs.veiculo.Empty;
+import br.com.jh.stubs.veiculo.ListaVeiculoResponse;
+import br.com.jh.stubs.veiculo.VeiculoMultaResponse;
+import br.com.jh.stubs.veiculo.VeiculoRequest;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import multa.v1.ConsultaMultasGrpc;
-import multa.v1.MultaOuterClass.MultaRequest;
-import multa.v1.MultaOuterClass.MultaResponse;
 
 @Service
 public class VeiculoClient {
@@ -30,7 +29,7 @@ public class VeiculoClient {
 		this.stub = ConsultaVeiculoGrpc.newBlockingStub(channel);
 	}
 
-	public VeiculoResponse getVeiculo(String placa) {
+	public VeiculoMultaResponse findByPlaca(String placa) {
 		
 		log.info("GATEWAY-SERVICE chamando VEICULO-SERVICE via gRPC. Placa={}", placa);
 
@@ -38,8 +37,17 @@ public class VeiculoClient {
                 .setPlaca(placa)
                 .build();
 
-        VeiculoResponse response = stub.getVeiculo(request);
+        VeiculoMultaResponse response = stub.findByPlaca(request);
         return response;
 		
+	}
+
+	public ListaVeiculoResponse findAll() {
+		
+		log.info("GATEWAY-SERVICE chamando VEICULO-SERVICE via gRPC.");
+		
+		ListaVeiculoResponse response = stub.findAll(Empty.getDefaultInstance());
+		
+		return response;
 	}
 }
