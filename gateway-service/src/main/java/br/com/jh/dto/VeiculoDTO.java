@@ -9,6 +9,7 @@ public record VeiculoDTO (
     String marca,
     String modelo,
     String cor,
+    String cpfProprietario,
     List<MultaDTO> multas,
     PessoaDTO pessoa
 ) {}

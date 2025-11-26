@@ -27,6 +27,7 @@ message VeiculoMultaResponse {
 	string marca = 4;
 	string modelo = 5;
 	string cor = 6;
+	string cpfProprietario = 7;
 	
 	repeated multa.v1.Multa listaMultas = 10;
 }
@@ -38,6 +39,7 @@ message VeiculoResponse {
 	string marca = 4;
 	string modelo = 5;
 	string cor = 6;
+	string cpfProprietario = 7;
 }
 
 message ListaVeiculoResponse {

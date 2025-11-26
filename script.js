@@ -1,28 +1,24 @@
 import http from 'k6/http';
-import { check } from 'k6';
+import { check, sleep } from 'k6';
 
 export const options = {
   scenarios: {
     consultaVeiculos: {
-      executor: 'ramping-arrival-rate',
+      executor: 'ramping-vus',
       exec: 'sampleTest',
-      // Duração total: ~7 minutos
-      startRate: 1,          // começa com 1 requisição/s
-      timeUnit: '1s',        // unidade da taxa
-      preAllocatedVUs: 10,   // VUs mínimos já alocados
-      maxVUs: 100,           // limite máximo de VUs que o k6 pode usar
+      startVUs: 0,
       stages: [
-        { duration: '2m', target: 5 },   // 2 min a caminho de 5 req/s (carga baixa)
-        { duration: '3m', target: 20 },  // 3 min subindo até 20 req/s (carga média)
-        { duration: '2m', target: 50 },  // 2 min subindo até 50 req/s (carga mais pesada)
+        { duration: '15s', target: 20 }, // sobe de 0 -> 20 usuários
+        { duration: '15s', target: 50 }, // sobe de 20 -> 50 usuários
+        { duration: '30s', target: 50 }, // mantém 50 usuários por 30s
+        { duration: '10s', target: 0 },  // rampa pra baixo
       ],
+      gracefulRampDown: '5s',
     },
   },
   thresholds: {
-    // menos de 1% de falhas
-    http_req_failed: ['rate<0.01'],
-    // 95% das requisições abaixo de 500ms (ajuste conforme sua realidade)
-    http_req_duration: ['p(95)<500'],
+    http_req_failed: ['rate<0.01'],      // menos de 1% de falhas
+    http_req_duration: ['p(95)<500'],   // 95% das reqs abaixo de 500ms (ajuste se precisar)
   },
 };
 
@@ -34,4 +30,7 @@ export function sampleTest() {
   check(res, {
     'status é 200': (r) => r.status === 200,
   });
+
+  // pequeno "think time" pra simular usuário real
+  sleep(1);
 }

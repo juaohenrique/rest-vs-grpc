@@ -1,0 +1,39 @@
+  █ THRESHOLDS
+
+    http_req_duration
+    ✓ 'p(95)<500' p(95)=7.22ms
+
+    http_req_failed
+    ✗ 'rate<0.01' rate=100.00%
+
+
+  █ TOTAL RESULTS
+
+    checks_total.......: 6809    16.21378/s
+    checks_succeeded...: 0.00%   0 out of 6809
+    checks_failed......: 100.00% 6809 out of 6809
+
+    ✗ status é 200
+      ↳  0% — ✓ 0 / ✗ 6809
+
+    HTTP
+    http_req_duration....: avg=5.18ms min=2.66ms med=4.93ms max=404.51ms p(90)=6.55ms p(95)=7.22ms
+    http_req_failed......: 100.00% 6809 out of 6809
+    http_reqs............: 6809    16.21378/s
+
+    EXECUTION
+    iteration_duration...: avg=5.55ms min=2.8ms  med=5.27ms max=448.44ms p(90)=6.98ms p(95)=7.75ms
+    iterations...........: 6809    16.21378/s
+    vus..................: 0       min=0            max=1
+    vus_max..............: 10      min=10           max=10
+
+    NETWORK
+    data_received........: 31 MB   73 kB/s
+    data_sent............: 769 kB  1.8 kB/s
+
+
+
+
+running (7m00.0s), 000/010 VUs, 6809 complete and 0 interrupted iterations
+consultaVeiculos ✗ [ 100% ] 000/010 VUs  7m00.0s/7m0s  49.99 iters/s
+time="2025-11-26T06:31:31Z" level=error msg="thresholds on metrics 'http_req_failed' have been crossed"

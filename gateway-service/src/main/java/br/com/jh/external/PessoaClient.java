@@ -1,4 +1,4 @@
-package br.com.jh.service;
+package br.com.jh.external;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
