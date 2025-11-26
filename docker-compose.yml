@@ -11,6 +11,46 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  
+  pessoa-REST:
+    build:
+      context: ./pessoa-REST
+      dockerfile: Dockerfile
+    container_name: multa-REST
+    ports:
+      - "8002:8002"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+  
+  gateway-REST:
+    build:
+      context: ./gateway-REST
+      dockerfile: Dockerfile
+    container_name: gateway-REST
+    ports:
+      - "8003:8003"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
 
+  veiculo-REST:
+    build:
+      context: ./veiculo-REST
+      dockerfile: Dockerfile
+    container_name: multa-REST
+    ports:
+      - "8004:8004"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+
+  multa-REST:
+    build:
+      context: ./multa-REST
+      dockerfile: Dockerfile
+    container_name: multa-REST
+    ports:
+      - "8005:8005"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+ 
 volumes:
   postgres_data:
