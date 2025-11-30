@@ -31,7 +31,7 @@ public class VeiculoClient {
 
 	public VeiculoMultaResponse findByPlaca(String placa) {
 		
-		log.info("GATEWAY-SERVICE chamando VEICULO-SERVICE via gRPC. Placa={}", placa);
+//		log.info("GATEWAY-SERVICE chamando VEICULO-SERVICE via gRPC. Placa={}", placa);
 
         VeiculoRequest request = VeiculoRequest.newBuilder()
                 .setPlaca(placa)
@@ -44,7 +44,7 @@ public class VeiculoClient {
 
 	public ListaVeiculoResponse findAll() {
 		
-		log.info("GATEWAY-SERVICE chamando VEICULO-SERVICE via gRPC.");
+//		log.info("GATEWAY-SERVICE chamando VEICULO-SERVICE via gRPC.");
 		
 		ListaVeiculoResponse response = stub.findAll(Empty.getDefaultInstance());
 		

@@ -31,7 +31,7 @@ public class PessoaClient {
 
 	public PessoaResponse findByCpf(String cpf) {
 		
-		log.info("GATEWAY-SERVICE chamando PESSOA-SERVICE via gRPC. CPF={}", cpf);
+//		log.info("GATEWAY-SERVICE chamando PESSOA-SERVICE via gRPC. CPF={}", cpf);
 
         PessoaRequest request = PessoaRequest.newBuilder()
                 .setCpf(cpf)
@@ -44,7 +44,7 @@ public class PessoaClient {
 	
 	public ListaPessoaResponse findByNome(String nome) {
 	
-		log.info("GATEWAY-SERVICE chamando PESSOA-SERVICE via gRPC.");
+//		log.info("GATEWAY-SERVICE chamando PESSOA-SERVICE via gRPC.");
 		
 		PessoaRequest request = PessoaRequest.newBuilder()
                 .setNome(nome)

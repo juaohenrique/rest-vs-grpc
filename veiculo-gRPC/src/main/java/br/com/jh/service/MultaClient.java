@@ -29,7 +29,7 @@ public class MultaClient {
     }
     
     public MultaResponse listarPorPlaca(String placa) {
-        log.info("VEICULO-SERVICE chamando MULTA-SERVICE via gRPC. Placa={}", placa);
+//        log.info("VEICULO-SERVICE chamando MULTA-SERVICE via gRPC. Placa={}", placa);
 
         MultaRequest request = MultaRequest.newBuilder()
                 .setPlaca(placa)
