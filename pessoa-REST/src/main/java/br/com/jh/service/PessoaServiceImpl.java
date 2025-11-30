@@ -3,20 +3,30 @@ package br.com.jh.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.jh.dao.PessoaDAO;
 import br.com.jh.dto.PessoaDTO;
+import br.com.jh.entity.Pessoa;
 
 @Service
 public class PessoaServiceImpl {
 	
-	// repository
+	@Autowired
+	private PessoaDAO dao;
 
 	public PessoaDTO findByCpf(String cpf) {
+
+		Pessoa pessoa = dao.findByCpf(cpf);
 		
-		PessoaDTO pessoa = new PessoaDTO(1, "joao henrique silva", "08/08/1888", "(98) 9876-1234", "Av. 1", cpf);
-				
-		return pessoa;
+		return new PessoaDTO(
+				pessoa.getId(), 
+				pessoa.getNome(), 
+				pessoa.getNascimento(), 
+				pessoa.getFone(), 
+				pessoa.getEndereco(), 
+				pessoa.getCpf());
 	}
 
 	public List<PessoaDTO> findByNome(String nome) {

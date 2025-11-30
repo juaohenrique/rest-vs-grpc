@@ -3,6 +3,18 @@ server:
 spring:
   application:
     name: pessoa-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_avaldes
+    username: postgres
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
   grpc:
     server:
       port: 9002

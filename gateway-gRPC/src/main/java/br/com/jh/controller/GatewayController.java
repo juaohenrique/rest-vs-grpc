@@ -59,32 +59,9 @@ private static final Logger log = LoggerFactory.getLogger(GatewayController.clas
 	@GetMapping("/veiculos/por-placa")
 	public ResponseEntity<VeiculoDTO> buscaVeiculoPorPlaca(@RequestParam String placa) {
 		
-		log.info("GATEWAY-SERVICE chamando VEICULO-SERVICE via gRPC. Placa={}", placa);
+//		log.info("GATEWAY-SERVICE chamando VEICULO-SERVICE via gRPC. Placa={}", placa);
 		
 		VeiculoDTO veiculo = veiculoService.findByPlaca(placa); 
-        
-//		PessoaDTO pessoa = pessoaService.findByCpf(veiculo.pessoa().cpf());
-		
-		
-//		List<MultaDTO> multas = List.of(
-//    	        new MultaDTO(1, placa, "Excesso de velocidade"),
-//    	        new MultaDTO(1, placa, "Estacionar em local proibido"),
-//    	        new MultaDTO(1, placa, "Avançar sinal vermelho"),
-//    	        new MultaDTO(1, placa, "Ultrapassar em local proibido"),
-//    	        new MultaDTO(1, placa, "Dirigir alcoolizado"),
-//    	        new MultaDTO(1, placa, "Não respeitar faixa de pedestres"),
-//    	        new MultaDTO(1, placa, "Dirigir sem habilitação")
-//    	    );
-        
-//		VeiculoDTO veiculoResponse = new VeiculoDTO(
-//				veiculo.id(), 
-//				veiculo.placa(), 
-//				veiculo.ano(), 
-//				veiculo.marca(),
-//				veiculo.modelo(),
-//				veiculo.cor(),
-//				multas,
-//				pessoa);
         
         return ResponseEntity.ok(veiculo);
 		

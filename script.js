@@ -11,7 +11,7 @@ export const options = {
 };
 
 export default function () {
-  const url = 'http://localhost:8003/consulta/veiculos/por-placa?placa=ABC1234';
+  const url = 'http://localhost:8003/consulta/veiculos/por-placa?placa=ABC1D23';
 
   const res = http.get(url);
 

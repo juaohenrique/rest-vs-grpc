@@ -2,19 +2,26 @@ package br.com.jh.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.jh.dao.VeiculoDAO;
 import br.com.jh.dto.MultaDTO;
 import br.com.jh.dto.VeiculoDTO;
+import br.com.jh.entity.Veiculo;
 import br.com.jh.external.MultaClientConfig;
 
 @Service
 public class VeiculoServiceImpl {
 	
+	@Autowired
+	private VeiculoDAO dao;
+	
 	private final MultaClientConfig multaClient;
 
-	private VeiculoServiceImpl(MultaClientConfig multaClient) {
+	private VeiculoServiceImpl(VeiculoDAO dao, MultaClientConfig multaClient) {
 		this.multaClient = multaClient;
+		this.dao = dao;
 	}
 
 	public List<VeiculoDTO> findAll() {
@@ -43,19 +50,19 @@ public class VeiculoServiceImpl {
 	}
 
 	public VeiculoDTO findByPlaca(String placa) {
-//		
-		VeiculoDTO veiculo = new VeiculoDTO(1, "ptl-3564", "2018", "Volkswagem", "Gol 1.0", "branco", "111.222.333-44", null, null);
+
+		Veiculo veiculo = dao.findByPlaca(placa);
 		
 		List<MultaDTO> multas = multaClient.findByPlaca(placa);
 		
 		VeiculoDTO veiculoCompleto = new VeiculoDTO(
-				veiculo.id(),
-				veiculo.placa(),
-				veiculo.ano(),
-				veiculo.marca(),
-				veiculo.modelo(),
-				veiculo.cor(),
-				veiculo.cpfProprietario(),
+				veiculo.getId(),
+				veiculo.getPlaca(),
+				veiculo.getAno(),
+				veiculo.getMarca(),
+				veiculo.getModelo(),
+				veiculo.getCor(),
+				veiculo.getCpfProprietario(),
 				multas,
 				null
 				);
