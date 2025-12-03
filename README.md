@@ -24,7 +24,10 @@ GET /consulta/veiculos/por-placa?placa=ABC1D23
 3. O `veiculo-service` consulta o `multa-service`.
 4. O gateway extrai o CPF do proprietário e consulta o `pessoa-service`.
 5. O gateway consolida os dados e devolve a resposta final.
-
+6. Cenário 1
+![ Cenário 1 - Local](docs/img/aos-atividade-2.png)
+7. Cenário 2
+![ Cenário 2 - Remoto](docs/img/aos-atividade.png)
 > **Obs.:**  
 > No REST as comunicações internas utilizam **Feign Client**.  
 > No gRPC, os serviços se comunicam diretamente via protobuf.
@@ -340,9 +343,10 @@ export default function () {
 ### 📌 Fator AC
 	- Crescimento de usuários afeta mais o ambiente remoto;
 	- Efeito é pequeno comparado ao impacto de A ou C observadas isoladamente.
+  
 ### 📌 Fator BC
 	- REST e Remoto são não pioram tanto quanto B e C isolados.
-	- 
+
 ### 📌 Fator ABC
 	- O pior desempenho ocorre quando os fatores estão no nível +1;
 	- Pior caso é 100 usuários, REST e Remoto.
@@ -358,8 +362,11 @@ export default function () {
    - REST tem escalabilidade pior que gRPC;
    - O gRPC é adequado para cenários que exigem alta escalabilidade e baixa latência;
   
-## 👤 10. Autor
+## 👤 10. Créditos
 
 **João Henrique**
-Desenvolvedor Backend | Java + Spring Boot | Arquitetura de Software
+Aluno: João Henrique Silva
+Disciplina: CCOM0004 - AVALIAÇÃO DE DESEMPENHO (2025 .2 - T01)
+Professor: Mário Antônio Meireles Teixeira
+Instituição: UFMA — Universidade Federal do Maranhão
 
