@@ -338,8 +338,8 @@ export default function () {
 	- REST sofre mais com o aumento do número de usuários.
 
 ### 📌 Fator AC
-	- Crescimento de usuários afeta mais o ambiente remoto, mas o efeito é pequeno comparado ao impacto de A ou C.
-	- 
+	- Crescimento de usuários afeta mais o ambiente remoto;
+	- Efeito é pequeno comparado ao impacto de A ou C observadas isoladamente.
 ### 📌 Fator BC
 	- REST e Remoto são não pioram tanto quanto B e C isolados.
 	- 
