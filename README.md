@@ -1,17 +1,7 @@
-Claro! Aqui está o **README.md totalmente editável**, exatamente no formato Markdown, pronto para copiar, colar e versionar no seu repositório.
 
-> **⚠️ Importante:** Este conteúdo está 100% editável — você pode copiar *tudo* sem formatação adicional.
-
----
-
-# 📘 **README.md (EDITÁVEL)**
-
-```markdown
 # 🚀 Avaliação de Desempenho entre os Padrões REST e gRPC
 
 Este projeto tem como objetivo comparar, de forma prática e quantitativa, o desempenho dos padrões de comunicação **REST** e **gRPC** dentro de um **ambiente de microsserviços**, utilizando **testes de carga**, análise de métricas e técnicas de avaliação de desempenho.
-
----
 
 ## 📌 1. Visão Geral do Projeto
 
@@ -26,11 +16,9 @@ Este projeto tem como objetivo comparar, de forma prática e quantitativa, o des
 ### 🧭 Fluxo geral da requisição (REST ou gRPC)
 
 1. O cliente (gateway-service) recebe a requisição:
-```
 
 GET /consulta/veiculos/por-placa?placa=ABC1D23
 
-````
 2. O gateway consulta o `veiculo-service`.
 3. O `veiculo-service` consulta o `multa-service`.
 4. O gateway extrai o CPF do proprietário e consulta o `pessoa-service`.
@@ -39,8 +27,6 @@ GET /consulta/veiculos/por-placa?placa=ABC1D23
 > **Obs.:**  
 > No REST as comunicações internas utilizam **Feign Client**.  
 > No gRPC, os serviços se comunicam diretamente via protobuf.
-
----
 
 ## ⚙️ 2. Instalação e Configuração
 
@@ -55,8 +41,6 @@ GET /consulta/veiculos/por-placa?placa=ABC1D23
 | k6 (testes de carga) | latest |
 | Git | Opcional |
 
----
-
 ### 📥 Clonar o repositório
 
 ```bash
@@ -64,15 +48,11 @@ git clone https://github.com/juaohenrique/rest-vs-grpc
 
 ````
 
----
-
 ### 🐘 Subir banco de dados via Docker
 
 ```bash
 docker compose up -d postgres
 ```
-
----
 
 ### ▶ Rodar os serviços
 
@@ -91,13 +71,10 @@ docker compose up -d
 > O arquivo `docker-compose.yml` organiza:
 > `gateway-service`, `veiculo-service`, `pessoa-service`, `multa-service` e `postgres`.
 
----
-
 ## 🧾 3. Contratos Protobuf (gRPC)
 
 Os arquivos `.proto` definem os modelos e serviços utilizados na comunicação gRPC.
 
----
 
 ### 🚗 **veiculo.proto**
 
@@ -151,8 +128,6 @@ message ListaVeiculoResponse {
 }
 ```
 
----
-
 ### 🧾 **multa.proto**
 
 ```proto
@@ -178,8 +153,6 @@ message MultaResponse {
     repeated Multa listaMultas = 1;
 }
 ```
-
----
 
 ### 👤 **pessoa.proto**
 
@@ -218,8 +191,6 @@ message ListaPessoaResponse {
 }
 ```
 
----
-
 ## 🧪 4. Uso — Exemplos de Requisição
 
 ### 🔗 Endpoint REST para testes
@@ -257,8 +228,6 @@ GET http://localhost:8003/consulta/veiculos/por-placa?placa=ABC1D23
 }
 ```
 
----
-
 ## 🏗 5. Arquitetura / Estrutura
 
 ### 🧩 Microsserviços
@@ -286,8 +255,6 @@ docker-compose.yml
 README.md
 ```
 
----
-
 ## 📊 6. Testes de Desempenho (k6)
 
 ### Script utilizado
@@ -314,8 +281,6 @@ export default function () {
   sleep(0.5);
 }
 ```
-
----
 
 ## 👤 9. Autor
 
