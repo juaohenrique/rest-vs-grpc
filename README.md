@@ -1,77 +1,324 @@
-# REST-vs-gRPC
-Avaliação de desempenho de diferentes padrões de comunicação em uma arquitetura de microservices.
+Claro! Aqui está o **README.md totalmente editável**, exatamente no formato Markdown, pronto para copiar, colar e versionar no seu repositório.
 
-1. RPC - Remote Procedure Call
-   - São chamadas de função pelo cliente que são executadas remotamente direto no servidor;
-   - Ex.: gRPC, Java RMI, XML-RPC, JSON-RPC, etc.
+> **⚠️ Importante:** Este conteúdo está 100% editável — você pode copiar *tudo* sem formatação adicional.
 
+---
 
+# 📘 **README.md (EDITÁVEL)**
 
-2. gRPC - Google Remote Procedure Call
-   - O gRPC é um framework desenvolvido pelo Google que possibilita a comunicação entre sistemas de forma leve, rápida e independente da linguagem de programação;
+```markdown
+# 🚀 Avaliação de Desempenho entre os Padrões REST e gRPC
+
+Este projeto tem como objetivo comparar, de forma prática e quantitativa, o desempenho dos padrões de comunicação **REST** e **gRPC** dentro de um **ambiente de microsserviços**, utilizando **testes de carga**, análise de métricas e técnicas de avaliação de desempenho.
+
+---
+
+## 📌 1. Visão Geral do Projeto
+
+- **Propósito:** Avaliar como **REST** e **gRPC** se comportam sob diferentes cargas, ambientes e padrões de comunicação.
+- **Objetivo principal:** Identificar qual padrão apresenta menor latência, maior throughput e maior estabilidade sob carga.
+- **Cenário:** O projeto simula um ambiente com três serviços:
+  - `veiculo-service`
+  - `multa-service`
+  - `pessoa-service`
+- Cada serviço possui **implementação REST e gRPC**, e um **gateway REST** centraliza as requisições e orquestra as chamadas entre serviços.
+
+### 🧭 Fluxo geral da requisição (REST ou gRPC)
+
+1. O cliente (gateway-service) recebe a requisição:
+```
+
+GET /consulta/veiculos/por-placa?placa=ABC1D23
+
+````
+2. O gateway consulta o `veiculo-service`.
+3. O `veiculo-service` consulta o `multa-service`.
+4. O gateway extrai o CPF do proprietário e consulta o `pessoa-service`.
+5. O gateway consolida os dados e devolve a resposta final.
+
+> **Obs.:**  
+> No REST as comunicações internas utilizam **Feign Client**.  
+> No gRPC, os serviços se comunicam diretamente via protobuf.
+
+---
+
+## ⚙️ 2. Instalação e Configuração
+
+### ✔ Pré-requisitos
+
+| Ferramenta | Versão recomendada |
+|------------|--------------------|
+| Java | 17 |
+| Spring Boot | 3.5.7 |
+| Docker / Docker Compose | latest |
+| PostgreSQL | 14+ |
+| k6 (testes de carga) | latest |
+| Git | Opcional |
+
+---
+
+### 📥 Clonar o repositório
+
+```bash
+git clone https://github.com/juaohenrique/rest-vs-grpc
+
+````
+
+---
+
+### 🐘 Subir banco de dados via Docker
+
+```bash
+docker compose up -d postgres
+```
+
+---
+
+### ▶ Rodar os serviços
+
+#### Via Maven:
+
+```bash
+mvn spring-boot:run
+```
+
+#### Via Docker Compose:
+
+```bash
+docker compose up -d
+```
+
+> O arquivo `docker-compose.yml` organiza:
+> `gateway-service`, `veiculo-service`, `pessoa-service`, `multa-service` e `postgres`.
+
+---
+
+## 🧾 3. Contratos Protobuf (gRPC)
+
+Os arquivos `.proto` definem os modelos e serviços utilizados na comunicação gRPC.
+
+---
+
+### 🚗 **veiculo.proto**
+
+```proto
+syntax = "proto3";
+
+package veiculo;
+
+option java_package = "br.com.jh.stubs.veiculo";
+option java_multiple_files = true;
+
+import "multa.proto";
+
+service ConsultaVeiculo {
+    rpc findByPlaca (VeiculoRequest) returns (VeiculoMultaResponse);
+    rpc findByProprietario (VeiculoRequest) returns (ListaVeiculoResponse);
+    rpc FindAll (Empty) returns (ListaVeiculoResponse);
+}
+
+message Empty {}
+
+message VeiculoRequest {
+    string placa = 1;
+    string cpfProprietario = 2;
+}
+
+message VeiculoMultaResponse {
+    int32 id = 1;
+    string placa = 2;
+    string ano = 3;
+    string marca = 4;
+    string modelo = 5;
+    string cor = 6;
+    string cpfProprietario = 7;
     
-   - Características:
-   - Independente de linguagem;
-   - Compactação eficiente de dados;
-   - Serialização e desserialização eficientes;
-   - Simples de usar;
-   - Usa HTTP/2 com Protocol Buffers
-   - Protocol Buffers (protobuf)
+    repeated multa.v1.Multa listaMultas = 10;
+}
 
-3. Protocol Buffers (protobuf)
-   - o gRPC usa o HTTP/2 para se comunicar e trafegar dados e por isso usa o Protocol Buffers;
-   - seu objetivo é ser leve, rápido e simples;
-   - antes de enviar os dados são convertidos em binários, tornando a mensagem mais leve;
-   - usa uma Linguagem de Definição de Interfaces (IDL);
-   - a chamada de um método remoto é, essencialmente, uma chamada comum de um método local, que é interceptada por um modelo local do objeto remoto e transformada em uma chamada de rede, ou seja, você está chamando um método local como se fosse um método remoto.
+message VeiculoResponse {
+    int32 id = 1;
+    string placa = 2;
+    string ano = 3;
+    string marca = 4;
+    string modelo = 5;
+    string cor = 6;
+    string cpfProprietario = 7;
+}
 
-4.  Arquivo .proto
-   - é um arquivo de texto que define o contrato (interface) entre o cliente e o servidor no gRPC.
-   - é escrito na linguagem Protocol Buffers (protobuf);
-   - define a estrutura dos dados que queremos serializar;
-   - os dados do protobuf são estruturados como mensagem;
-   - Esse arquivo é a única fonte da verdade sobre:
-     - Quais métodos (RPCs) o serviço oferece;
-     - Quais dados entram (parâmetros/request);
-     - Quais dados saem (resposta/response);
-     - Como esses dados são estruturados (campos, tipos, números de campo, etc);
-   
-    Exemplo:
-        
-        // define a versão do protobuf que estamos usando;
-        syntax = "proto3"; 
+message ListaVeiculoResponse {
+    repeated VeiculoResponse listaVeiculos = 1;
+}
+```
 
-        // usado para resolução de conflitos;
-        package greeting;   
+---
 
-        // pacote onde serão geradas as classes a partir do .proto;
-        option java_package = "br.com.joao"; 
+### 🧾 **multa.proto**
 
-        
-        // nome da função que pode ser chamada "greet";
-        // a função "greet" recebe uma entrada do tipo ClientInput;
-        // a função "greer" retorna uma saída do tipo ServerOutput;
+```proto
+syntax = "proto3";
 
-        service Greeter {   // representa o nome do serviço "Greeter"
-          rpc greet (ClientInput) returns (ServerOutput) {}
-        }                                                   
+package multa.v1;
 
-        
-        // definimos que a entrada em 2 atributos: "greeting" e "name";
-        message ClientInput {
-          string greeting = 1;
-          string name = 2;
-        }
+service ConsultaMultas {
+    rpc ListarPorPlaca (MultaRequest) returns (MultaResponse);
+}
 
-        // saida do servidor definida com o atributo "message"
-        message ServerOutput {
-          string message = 1;
-        }
+message MultaRequest {
+    string placa = 1;
+}
 
-![Arquitetura gRPC](arq-grpc.png)
-![Arquitetura REST](arq-rest.png)
-                
-5.  Define o protobuf de multa-service
-6.  Define o protobuf de veiculo-service
-7.  Define o protobuf de pessoa-service
-8.  Define o protobuf de gateway-service
+message Multa {
+    int32 id = 1;
+    string placa = 2;
+    string ctb = 3;
+}
+
+message MultaResponse {
+    repeated Multa listaMultas = 1;
+}
+```
+
+---
+
+### 👤 **pessoa.proto**
+
+```proto
+syntax = "proto3";
+
+package pessoa;
+
+option java_package = "br.com.jh.stubs";
+option java_multiple_files = true;
+
+service ConsultaPessoa {
+    rpc FindByCpf (PessoaRequest) returns (PessoaResponse);
+    rpc FindByNome (PessoaRequest) returns (ListaPessoaResponse);
+    rpc FindAll (Empty) returns (ListaPessoaResponse);
+}
+
+message Empty {}
+
+message PessoaRequest {
+    string nome = 1;
+    string cpf = 2;
+}
+
+message PessoaResponse {
+    int32 id = 1;
+    string nome = 2;
+    string nascimento = 3;
+    string fone = 4;
+    string endereco = 5;
+    string cpf = 6;
+}
+
+message ListaPessoaResponse {
+    repeated PessoaResponse listaPessoas = 1;
+}
+```
+
+---
+
+## 🧪 4. Uso — Exemplos de Requisição
+
+### 🔗 Endpoint REST para testes
+
+```
+GET http://localhost:8003/consulta/veiculos/por-placa?placa=ABC1D23
+```
+
+### 📤 Exemplo de resposta JSON
+
+```json
+{
+  "id": 1,
+  "placa": "ABC1D23",
+  "ano": "2023",
+  "marca": "Volkswagen",
+  "modelo": "Gol",
+  "cor": "Prata",
+  "cpfProprietario": "123.456.789-00",
+  "multas": [
+    {
+      "id": 1,
+      "placa": "ABC1D23",
+      "ctb": "Excesso de velocidade (art. 218, I) - até 20% acima"
+    }
+  ],
+  "pessoa": {
+    "id": 1,
+    "nome": "João Silva Santos",
+    "nascimento": "1985-03-15",
+    "fone": "(11) 98765-4321",
+    "endereco": "Rua das Flores, 123",
+    "cpf": "123.456.789-00"
+  }
+}
+```
+
+---
+
+## 🏗 5. Arquitetura / Estrutura
+
+### 🧩 Microsserviços
+
+| Serviço             | Protocolo   | Função                       |
+| ------------------- | ----------- | ---------------------------- |
+| **gateway-service** | REST        | Orquestra chamadas REST/gRPC |
+| **veiculo-service** | REST + gRPC | Consulta veículo e multas    |
+| **multa-service**   | REST + gRPC | Lista multas por placa       |
+| **pessoa-service**  | REST + gRPC | Consulta pessoa              |
+
+---
+
+### 📂 Estrutura sugerida dos diretórios
+
+```
+/gateway-service
+/veiculo-service
+/multa-service
+/pessoa-service
+/common-protos
+/k6-scripts
+/docs
+docker-compose.yml
+README.md
+```
+
+---
+
+## 📊 6. Testes de Desempenho (k6)
+
+### Script utilizado
+
+```js
+import http from 'k6/http';
+import { check, sleep } from 'k6';
+
+export const options = {
+  vus: 100,
+  duration: '60s',
+  thresholds: {
+    http_req_failed: ['rate<0.01'],
+    http_req_duration: ['p(95)<200']
+  },
+};
+
+export default function () {
+  const url = 'http://localhost:8003/consulta/veiculos/por-placa?placa=ABC1D23';
+  const res = http.get(url);
+
+  check(res, { 'status 200': (r) => r.status === 200 });
+
+  sleep(0.5);
+}
+```
+
+---
+
+## 👤 9. Autor
+
+**João Henrique**
+Desenvolvedor Backend | Java + Spring Boot | Arquitetura de Software
+
