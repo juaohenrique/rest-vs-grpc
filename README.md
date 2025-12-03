@@ -27,7 +27,7 @@ GET /consulta/veiculos/por-placa?placa=ABC1D23
 6. Cenário 1
 ![ Cenário 1 - Local](docs/img/aos-atividade-2.png)
 7. Cenário 2
-![ Cenário 2 - Remoto](docs/img/aos-atividade.png)
+![ Cenário 2 - Remoto](docs/img/aos-atividade-2-remote.png)
 > **Obs.:**  
 > No REST as comunicações internas utilizam **Feign Client**.  
 > No gRPC, os serviços se comunicam diretamente via protobuf.
