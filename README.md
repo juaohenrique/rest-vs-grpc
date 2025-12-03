@@ -12,7 +12,7 @@ Este projeto tem como objetivo comparar, de forma prática e quantitativa, o des
   - `veiculo-service`
   - `multa-service`
   - `pessoa-service`
-- Cada serviço possui **implementação REST e gRPC**, e um **gateway REST** requisições do cliente via REST e chama o serviço de veículos via gRPC ou REST.
+- Cada serviço possui **implementação REST e gRPC**, e um **gateway REST** recebe requisições do cliente via REST no seu endpoint e chama o serviço de veículos via gRPC ou REST.
 
 ### 🧭 Fluxo geral da requisição (REST ou gRPC)
 
