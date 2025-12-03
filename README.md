@@ -8,10 +8,11 @@ Este projeto tem como objetivo comparar, de forma prática e quantitativa, o des
 - **Propósito:** Avaliar como **REST** e **gRPC** se comportam sob diferentes cargas, ambientes e padrões de comunicação.
 - **Objetivo principal:** Identificar qual padrão apresenta menor latência, maior throughput e maior estabilidade sob carga.
 - **Cenário:** O projeto simula um ambiente com três serviços:
+  - `gateway-service`
   - `veiculo-service`
   - `multa-service`
   - `pessoa-service`
-- Cada serviço possui **implementação REST e gRPC**, e um **gateway REST** centraliza as requisições e orquestra as chamadas entre serviços.
+- Cada serviço possui **implementação REST e gRPC**, e um **gateway REST** requisições do cliente via REST e chama o serviço de veículos via gRPC ou REST.
 
 ### 🧭 Fluxo geral da requisição (REST ou gRPC)
 
@@ -59,8 +60,22 @@ docker compose up -d postgres
 #### Via Maven:
 
 ```bash
-mvn spring-boot:run
+mvn clean install
 ```
+
+### ▶ Se alterar qualquer .proto, será necessário atualizar as classes stubs
+
+#### Via Maven:
+
+```bash
+mvn clean install
+```
+
+> **Obs.:**  
+> No ambiente gRPC, cada service tem seus arquivos de contrato .proto.
+> Se houver qualquer atualização em quaisquer contratos, os novos .proto também deverão ser atualizados em todos os serviços que os utilizem.
+> Para contornar esse problema, a melhor solução é ter um projeto de contratos importado como dependência maven nos demais serviços.
+
 
 #### Via Docker Compose:
 
