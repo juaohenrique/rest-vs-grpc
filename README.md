@@ -300,11 +300,64 @@ export default function () {
 ```
 
 ## 🔢 7. Tabela de sinais
+### Fatores e sinais
+| Fator                        | -1    | 1      |
+|-----------------------------|-------|--------|
+| **A – Nº de usuários**      | 50    | 100    |
+| **B – Padrão de comunicação** | gRPC  | REST   |
+| **C – Ambiente**            | Local | Remoto |
+
+### Tabela fatorial
+| A   | B   | C   | AB  | AC  | BC  | ABC | p95 (ms) | req/s  |
+|-----|-----|-----|-----|-----|-----|-----|----------|--------|
+| -1  | -1  | -1  | +1  | +1  | +1  | -1  | 114.99   | 89.87  |
+| -1  | -1  | +1  | +1  | -1  | -1  | +1  | 204.20   | 85.59  |
+| -1  | +1  | -1  | -1  | +1  | -1  | +1  | 106.49   | 91.44  |
+| -1  | +1  | +1  | -1  | -1  | +1  | -1  | 571.27   | 67.15  |
+| +1  | -1  | -1  | -1  | -1  | +1  | +1  | 143.17   | 177.44 |
+| +1  | -1  | +1  | -1  | +1  | -1  | -1  | 664.31   | 141.53 |
+| +1  | +1  | -1  | +1  | -1  | -1  | -1  | 930.74   | 104.83 |
+| +1  | +1  | +1  | +1  | +1  | +1  | +1  | 1040.00  | 114.17 |
+| **Efeito** | **445.32** | **380.46** | **296.10** | 201.17 | 19.10 | -9.08 | -196.86 | **471.90 ms** | — |
+
 
 ## 🎯 8. Resultados obtidos
+### 📌 Fator A
+  - Aumentar quantidade de usuários aumenta o tempo de resposta;
+  - Quando usuários sobem de 50 → 100, o p95 aumenta em 445 msem média.
+  
+### 📌 Fator B
+   - REST aumenta o p95 em 380,46 ms;
+   - REST piora muito mais que gRPC ao subir a carga.
+
+### 📌 Fator C
+	- Executar remotamente aumenta o p95 em 296.10 ms;
+
+### 📌 Fator AB
+	- Com 50 usuários, REST e gRPC são mais próximos;
+	- REST sofre mais com o aumento do número de usuários.
+
+### 📌 Fator AC
+	- Crescimento de usuários afeta mais o ambiente remoto, mas o efeito é pequeno comparado ao impacto de A ou C.
+	- 
+### 📌 Fator BC
+	- REST e Remoto são não pioram tanto quanto B e C isolados.
+	- 
+### 📌 Fator ABC
+	- O pior desempenho ocorre quando os fatores estão no nível +1;
+	- Pior caso é 100 usuários, REST e Remoto.
+
+### 📊 Gráfico comparativo
+![ gRPC x REST - p95, trhoughput](docs/img/grafico-resultado.png)
 
 ## 📝 11. Conclusão do experimento
-
+   - A análise fatorial mostrou que aumentar quantidade de usuários tem maior impacto no p95;
+   - Pra análise realizada, a quantidade de usuários simultâneos são o maior gargalo;
+   - O padrão REST apresentou desempenho muito pior que o gRPC, mesmo em um ambiente de testes estável;
+   - O efeito B é muito forte e quase tão grande quanto o efeito A;
+   - REST tem escalabilidade pior que gRPC;
+   - O gRPC é adequado para cenários que exigem alta escalabilidade e baixa latência;
+  
 ## 👤 10. Autor
 
 **João Henrique**
