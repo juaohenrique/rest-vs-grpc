@@ -20,16 +20,19 @@ Este projeto tem como objetivo comparar, de forma prática e quantitativa, o des
 
 GET /consulta/veiculos/por-placa?placa=ABC1D23
 
-2. O gateway consulta o `veiculo-service`.
-3. O `veiculo-service` consulta o `multa-service`.
-4. O gateway extrai o CPF do proprietário e consulta o `pessoa-service`.
-5. O gateway consolida os dados e devolve a resposta final.
-6. Cenário 1
+2. `gateway-service` consulta o `veiculo-service`.
+3. `veiculo-service` consulta o `multa-service`.
+4. `gateway-service` extrai o CPF do proprietário da resposta de `veiculo-service` e consulta o `pessoa-service`.
+5. `gateway-service` consolida os dados e devolve no response.
+   
+6. Cenário 1 - Tudo rodando em um único ambiente
 ![ Cenário 1 - Local](docs/img/aos-atividade-2.png)
-7. Cenário 2
+
+1. Cenário 2 - Cliente e `gateway-service` são executados em outra máquina
 ![ Cenário 2 - Remoto](docs/img/aos-atividade-2-remote.png)
+
 > **Obs.:**  
-> No REST as comunicações internas utilizam **Feign Client**.  
+> No REST as comunicações internas utilizam **Feign Client**;  
 > No gRPC, os serviços se comunicam diretamente via protobuf.
 
 ## ⚙️ 2. Instalação e Configuração
@@ -45,55 +48,22 @@ GET /consulta/veiculos/por-placa?placa=ABC1D23
 | k6 (testes de carga) | latest |
 | Git | Opcional |
 
-### 📥 Clonar o repositório
-
-```bash
-git clone https://github.com/juaohenrique/rest-vs-grpc
-
-````
-
 ### 🐘 Subir banco de dados via Docker
 
 ```bash
 docker compose up -d postgres
 ```
 
-### ▶ Rodar os serviços
-
-#### Via Maven:
-
-```bash
-mvn clean install
-```
-
-### ▶ Se alterar qualquer .proto, será necessário atualizar as classes stubs
-
-#### Via Maven:
-
-```bash
-mvn clean install
-```
-
-> **Obs.:**  
-> No ambiente gRPC, cada service tem seus arquivos de contrato .proto.
-
-> Se houver mudança em quaisquer contratos, os novos .proto também deverão ser atualizados em todos os serviços que os utilizem.
-
-> Para contornar esse problema, a melhor solução é ter um projeto de contratos importado como dependência maven nos demais serviços.
-
-
-#### Via Docker Compose:
-
-```bash
-docker compose up -d
-```
-
-> O arquivo `docker-compose.yml` organiza:
-> `gateway-service`, `veiculo-service`, `pessoa-service`, `multa-service` e `postgres`.
-
 ## 🧾 3. Contratos Protobuf (gRPC)
 
 Os arquivos `.proto` definem os modelos e serviços utilizados na comunicação gRPC.
+
+> **Obs.:**  
+> No ambiente gRPC, cada service tem seus arquivos de contrato .proto;
+
+> Se houver mudança em quaisquer contratos, os novos .proto também deverão ser atualizados em todos os serviços que os utilizem;
+
+> Para contornar esse problema, a melhor solução é ter um projeto de contratos importado como dependência maven nos demais serviços.
 
 
 ### 🚗 **veiculo.proto**
@@ -213,8 +183,7 @@ message ListaPessoaResponse {
 
 ## 🧪 4. Uso — Exemplos de Requisição
 
-### 🔗 Endpoint REST para testes
-
+### 🔗 Endpoint REST para testes: 
 ```
 GET http://localhost:8003/consulta/veiculos/por-placa?placa=ABC1D23
 ```
@@ -254,37 +223,25 @@ GET http://localhost:8003/consulta/veiculos/por-placa?placa=ABC1D23
 
 | Serviço             | Protocolo   | Função                       |
 | ------------------- | ----------- | ---------------------------- |
-| **gateway-service** | REST        | Orquestra chamadas REST/gRPC |
-| **veiculo-service** | REST + gRPC | Consulta veículo e multas    |
-| **multa-service**   | REST + gRPC | Lista multas por placa       |
-| **pessoa-service**  | REST + gRPC | Consulta pessoa              |
+| **gateway-service** | REST/ gRPC  | Orquestra chamadas REST/gRPC |
+| **veiculo-service** | REST/ gRPC  | Consulta veículo e multas    |
+| **multa-service**   | REST/ gRPC  | Lista multas por placa       |
+| **pessoa-service**  | REST/ gRPC  | Consulta pessoa              |
 
----
-
-### 📂 Estrutura sugerida dos diretórios
-
-```
-/gateway-service
-/veiculo-service
-/multa-service
-/pessoa-service
-/common-protos
-/k6-scripts
-/docs
-docker-compose.yml
-README.md
-```
 
 ## 📊 6. Testes de Desempenho (k6)
 
 ### Script utilizado
+
+No teste de carga realizado, define-se a quantidade de usuários simultâneos (50 ou 100).
+
 
 ```js
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
 export const options = {
-  vus: 100,
+  vus: 100,					// carga de usuários simultâneos (50 ou 100)
   duration: '60s',
   thresholds: {
     http_req_failed: ['rate<0.01'],
@@ -304,11 +261,11 @@ export default function () {
 
 ## 🔢 7. Tabela de sinais
 ### Fatores e sinais
-| Fator                        | -1    | 1      |
-|-----------------------------|-------|--------|
-| **A – Nº de usuários**      | 50    | 100    |
+| Fator                         | -1    | 1      |
+|-------------------------------|-------|--------|
+| **A – Nº de usuários**        | 50    | 100    |
 | **B – Padrão de comunicação** | gRPC  | REST   |
-| **C – Ambiente**            | Local | Remoto |
+| **C – Ambiente**              | Local | Remoto |
 
 ### Tabela fatorial
 | A   | B   | C   | AB  | AC  | BC  | ABC | p95 (ms) | req/s  |
@@ -327,36 +284,36 @@ export default function () {
 ## 🎯 8. Resultados obtidos
 ### 📌 Fator A
   - Aumentar quantidade de usuários aumenta o tempo de resposta;
-  - Quando usuários sobem de 50 → 100, o p95 aumenta em 445 msem média.
+  - Quando usuários sobem de 50 para 100, o p95 aumenta em 445ms em média.
   
 ### 📌 Fator B
-   - REST aumenta o p95 em 380,46 ms;
-   - REST piora muito mais que gRPC ao subir a carga.
+  - REST aumenta o p95 em 380,46 ms;
+  - REST piora muito mais que gRPC ao subir a carga.
 
 ### 📌 Fator C
-	- Executar remotamente aumenta o p95 em 296.10 ms;
+  - Executar remotamente aumenta o p95 em 296,10 ms;
 
 ### 📌 Fator AB
-	- Com 50 usuários, REST e gRPC são mais próximos;
-	- REST sofre mais com o aumento do número de usuários.
+  - Com 50 usuários, REST e gRPC são mais próximos;
+  - REST sofre mais com o aumento do número de usuários.
 
 ### 📌 Fator AC
-	- Crescimento de usuários afeta mais o ambiente remoto;
-	- Efeito é pequeno comparado ao impacto de A ou C observadas isoladamente.
+  - Crescimento de usuários afeta mais o ambiente remoto;
+  - O efeito da interação é pequeno comparado ao impacto de A ou C observadas isoladamente.
   
 ### 📌 Fator BC
-	- REST e Remoto são não pioram tanto quanto B e C isolados.
+  - REST e Remoto não pioram tanto quanto B e C isolados.
 
 ### 📌 Fator ABC
-	- O pior desempenho ocorre quando os fatores estão no nível +1;
-	- Pior caso é 100 usuários, REST e Remoto.
+  - O pior desempenho ocorre quando os fatores estão no nível +1;
+  - Pior caso é 100 usuários, REST e Remoto.
 
 ### 📊 Gráfico comparativo
 ![ gRPC x REST - p95, trhoughput](docs/img/grafico-resultado.png)
 
 ## 📝 11. Conclusão do experimento
    - A análise fatorial mostrou que aumentar quantidade de usuários tem maior impacto no p95;
-   - Pra análise realizada, a quantidade de usuários simultâneos são o maior gargalo;
+   - Pra análise realizada, a quantidade de usuários simultâneos é o maior gargalo;
    - O padrão REST apresentou desempenho muito pior que o gRPC, mesmo em um ambiente de testes estável;
    - O efeito B é muito forte e quase tão grande quanto o efeito A;
    - REST tem escalabilidade pior que gRPC;
@@ -364,9 +321,8 @@ export default function () {
   
 ## 👤 10. Créditos
 
-**João Henrique**
-Aluno: João Henrique Silva
-Disciplina: CCOM0004 - AVALIAÇÃO DE DESEMPENHO (2025 .2 - T01)
-Professor: Mário Antônio Meireles Teixeira
-Instituição: UFMA — Universidade Federal do Maranhão
+  - **Aluno:** João Henrique Silva
+  - **Disciplina:** CCOM0004 - AVALIAÇÃO DE DESEMPENHO (2025 .2 - T01)
+  - **Professor:** Mário Antônio Meireles Teixeira
+  - **Instituição:** UFMA — Universidade Federal do Maranhão
 
