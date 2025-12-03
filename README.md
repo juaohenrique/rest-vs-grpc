@@ -299,7 +299,13 @@ export default function () {
 }
 ```
 
-## 👤 9. Autor
+## 🔢 7. Tabela de sinais
+
+## 🎯 8. Resultados obtidos
+
+## 📝 11. Conclusão do experimento
+
+## 👤 10. Autor
 
 **João Henrique**
 Desenvolvedor Backend | Java + Spring Boot | Arquitetura de Software
