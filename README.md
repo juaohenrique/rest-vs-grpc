@@ -73,7 +73,7 @@ mvn clean install
 
 > **Obs.:**  
 > No ambiente gRPC, cada service tem seus arquivos de contrato .proto.
-> Se houver qualquer atualização em quaisquer contratos, os novos .proto também deverão ser atualizados em todos os serviços que os utilizem.
+> Se houver mudança em quaisquer contratos, os novos .proto também deverão ser atualizados em todos os serviços que os utilizem.
 > Para contornar esse problema, a melhor solução é ter um projeto de contratos importado como dependência maven nos demais serviços.
 
 
